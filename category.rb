@@ -2,7 +2,6 @@ class Category
 
   def initialize(id, hom, comp)
     @id, @hom, @comp = id.freeze, hom.freeze, comp.freeze
-    validate_unique_arrows
 
     @src, @trg = {}, {}
     @hom.each do |(x, y), arrs|
@@ -14,9 +13,19 @@ class Category
     @src.freeze
     @trg.freeze
 
-    validate_comp_defined_for_hom
-    validate_comp_domain
-    validate_identity_law
+    validate_unique_objects
+    validate_unique_arrows
+    validate_identities_are_arrows
+
+    validate_arrows_have_sources_and_targets
+    validate_sources_and_targets_are_objects
+    validate_identities_are_endomorphisms
+
+    validate_comp_defined_for_arrows
+    validate_comp_composable
+    validate_comp_preserves_sources_and_targets
+
+    validate_identity_laws
     validate_associativity_law
   end
 
@@ -36,33 +45,63 @@ class Category
 
   private
 
+  def validate_unique_objects
+    unless objects.size == objects.uniq.size
+      raise "duplicate object"
+    end
+  end
+
   def validate_unique_arrows
     unless arrows.size == arrows.uniq.size
       raise "arrow with duplicate source or target"
     end
   end
 
-  def validate_comp_domain
-    @comp.each do |(g, f), arr|
-      unless src(g) == trg(f)
-        
-        desc =  "\n#{g} . #{f}"
-        desc << "\nsrc(#{g}) = #{src(g)}"
-        desc << "\ntrg(#{f}) = #{trg(f)}"
-        raise "composition type mismatch:#{desc}"
-      end
-
-      unless src(arr) == src(f)
-        raise "composition source mismatch"
-      end
-      
-      unless trg(arr) == trg(g)
-        raise "composition target mismatch"
+  def validate_identities_are_arrows
+    objects.each do |x|
+      unless arrows.include? id(x)
+        raise "identity not a morphism"
       end
     end
   end
 
-  def validate_comp_defined_for_hom
+  def validate_arrows_have_sources_and_targets
+    arrows.each do |f|
+      unless @src.key?(f)
+        raise "arrow without source"
+      end
+
+      unless @trg.key?(f)
+        raise "arrow without target"
+      end
+    end
+  end
+
+  def validate_sources_and_targets_are_objects
+    arrows.each do |f|
+      unless objects.include? src(f)
+        raise "source is not an object"
+      end
+
+      unless objects.include? trg(f)
+        raise "target is not an object"
+      end
+    end
+  end
+
+  def validate_identities_are_endomorphisms
+    objects.each do |x|
+      unless src(id(x)) == x
+        raise "identity not an endomorphism"
+      end
+
+      unless trg(id(x)) == x
+        raise "identity not an endomorphism"
+      end
+    end
+  end
+
+  def validate_comp_defined_for_arrows
     arrows.each do |f|
       from(trg(f)).each do |g|
         unless @comp.key? [g, f]
@@ -73,7 +112,30 @@ class Category
     end
   end
 
-  def validate_identity_law
+  def validate_comp_composable
+    @comp.each do |(g, f), gof|
+      unless src(g) == trg(f)
+        desc =  "\n#{g} . #{f}"
+        desc << "\nsrc(#{g}) = #{src(g)}"
+        desc << "\ntrg(#{f}) = #{trg(f)}"
+        raise "composition not composable:#{desc}"
+      end
+    end
+  end
+
+  def validate_comp_preserves_sources_and_targets
+    @comp.each do |(g, f), gof|
+      unless src(gof) == src(f)
+        raise "composition source mismatch"
+      end
+
+      unless trg(gof) == trg(g)
+        raise "composition target mismatch"
+      end
+    end
+  end
+
+  def validate_identity_laws
     arrows.each do |arr|
       unless comp( arr, id(src(arr)) ) == arr
         raise "identity law"
