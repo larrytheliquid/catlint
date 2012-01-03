@@ -14,6 +14,7 @@ class Category
     @src.freeze
     @trg.freeze
 
+    validate_comp_defined_for_hom
     validate_comp_domain
     validate_identity_law
     validate_associativity_law
@@ -57,6 +58,17 @@ class Category
       
       unless trg(arr) == trg(g)
         raise "composition target mismatch"
+      end
+    end
+  end
+
+  def validate_comp_defined_for_hom
+    arrows.each do |f|
+      hom_src(trg(f)).each do |g|
+        unless @comp.key? [g, f]
+          desc = "\n#{g} . #{f}"
+          raise "composition not defined:#{desc}"
+        end
       end
     end
   end
