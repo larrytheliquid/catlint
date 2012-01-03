@@ -28,7 +28,7 @@ class Category
   def src(f) @src.fetch f end
   def trg(f) @trg.fetch f end
 
-  def hom_src(x)
+  def from(x)
     objects.map do |y|
       hom(x, y)
     end.flatten
@@ -64,7 +64,7 @@ class Category
 
   def validate_comp_defined_for_hom
     arrows.each do |f|
-      hom_src(trg(f)).each do |g|
+      from(trg(f)).each do |g|
         unless @comp.key? [g, f]
           desc = "\n#{g} . #{f}"
           raise "composition not defined:#{desc}"
@@ -87,8 +87,8 @@ class Category
 
   def validate_associativity_law
     arrows.each do |f|
-      hom_src(trg(f)).each do |g|
-        hom_src(trg(g)).each do |h|
+      from(trg(f)).each do |g|
+        from(trg(g)).each do |h|
           unless comp( comp(h, g), f) == comp(h, comp(g, f))
             desc =  "\n#{g} . #{f} = #{comp(g, f)}"
             desc << "\n#{h} . #{g} = #{comp(h, g)}"
