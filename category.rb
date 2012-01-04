@@ -1,3 +1,4 @@
+require 'uri'
 class Category
   Error = Class.new StandardError
 
@@ -47,15 +48,20 @@ class Category
   end
 
   def to_dot
-    fontsize = 8
     result = "digraph category {"
-    result << "\n  node [fontsize=#{fontsize}];"
     arrows.each do |f|
-      # result << "\n  \"#{src(f)}\" -> \"#{trg(f)}\" [label=\"#{f}\", fontsize=#{fontsize}];"
       result << "\n  \"#{src(f)}\" -> \"#{trg(f)}\";"
     end
     result << "\n}"
     result
+  end
+
+  def to_dot_param
+    URI.escape to_dot
+  end
+
+  def to_gchart_url
+    "http://chart.apis.google.com/chart?cht=gv:circo&chl=#{to_dot_param}"
   end
 
   private
