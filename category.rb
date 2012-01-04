@@ -46,6 +46,17 @@ class Category
     end.flatten
   end
 
+  def to_dot
+    fontsize = 8
+    result = "digraph category {"
+    result << "\n  node [fontsize=#{fontsize}];"
+    arrows.each do |f|
+      result << "\n  \"#{src(f)}\" -> \"#{trg(f)}\" [label=\"#{f}\", fontsize=#{fontsize}];"
+    end
+    result << "\n}"
+    result
+  end
+
   private
 
   def validate_syntax
@@ -193,6 +204,66 @@ class Category
         end
       end
     end
+  end
+
+  public
+
+  def self.example_id
+    {
+      :home_business => :home_business_ident,
+      :business => :business_ident,
+      :residence => :residence_ident,
+      :house => :house_ident,
+    }
+  end
+
+  def self.example_hom
+    {
+      [:home_business, :home_business] => [:home_business_ident],
+      [:business, :business] => [:business_ident],
+      [:residence, :residence] => [:residence_ident],
+      [:house, :house] => [:house_ident],
+      
+      [:home_business, :business] => [:home_business_is_a_business],
+      [:home_business, :residence] => [:home_business_is_a_residence],
+      
+      [:business, :house] => [:business_is_a_house],
+      [:residence, :house] => [:residence_is_a_house],
+      
+      [:home_business, :house] => [:home_business_is_a_business_house,
+                                   :home_business_is_a_residence_house],
+    }
+  end
+
+  def self.example_comp
+    {
+      [:home_business_ident, :home_business_ident] => :home_business_ident,
+      [:business_ident, :business_ident] => :business_ident,
+      [:residence_ident, :residence_ident] => :residence_ident,
+      [:residence_ident, :residence_ident] => :residence_ident,
+      [:house_ident, :house_ident] => :house_ident,
+      
+      [:home_business_is_a_business, :home_business_ident] => :home_business_is_a_business,
+      [:business_ident, :home_business_is_a_business] => :home_business_is_a_business,
+      
+      [:home_business_is_a_residence, :home_business_ident] => :home_business_is_a_residence,
+      [:residence_ident, :home_business_is_a_residence] => :home_business_is_a_residence,
+      
+      [:business_is_a_house, :business_ident] => :business_is_a_house,
+      [:house_ident, :business_is_a_house] => :business_is_a_house,
+      
+      [:residence_is_a_house, :residence_ident] => :residence_is_a_house,
+      [:house_ident, :residence_is_a_house] => :residence_is_a_house,
+      
+      [:home_business_is_a_business_house, :home_business_ident] => :home_business_is_a_business_house,
+      [:house_ident, :home_business_is_a_business_house] => :home_business_is_a_business_house,
+      
+      [:home_business_is_a_residence_house, :home_business_ident] => :home_business_is_a_residence_house,
+      [:house_ident, :home_business_is_a_residence_house] => :home_business_is_a_residence_house,
+      
+      [:business_is_a_house, :home_business_is_a_business] => :home_business_is_a_business_house,
+      [:residence_is_a_house, :home_business_is_a_residence] => :home_business_is_a_residence_house,
+    }
   end
 
 end

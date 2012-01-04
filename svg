@@ -1,0 +1,3 @@
+#!/bin/sh
+ruby dot_example.rb > category.dot
+dot -Tsvg category.dot -o category.svg

@@ -10,3 +10,5 @@
 *.agdai
 MAlonzo
 Bot
+*.dot
+*.svg
