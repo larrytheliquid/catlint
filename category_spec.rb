@@ -3,9 +3,7 @@ Bundler.require(:default, :test)
 
 describe "A category" do
   let(:ident) { Category.example_id }
-  
   let(:hom) { Category.example_hom }
-  
   let(:comp) { Category.example_comp }
 
   it "can be valid" do

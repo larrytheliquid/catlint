@@ -51,7 +51,8 @@ class Category
     result = "digraph category {"
     result << "\n  node [fontsize=#{fontsize}];"
     arrows.each do |f|
-      result << "\n  \"#{src(f)}\" -> \"#{trg(f)}\" [label=\"#{f}\", fontsize=#{fontsize}];"
+      # result << "\n  \"#{src(f)}\" -> \"#{trg(f)}\" [label=\"#{f}\", fontsize=#{fontsize}];"
+      result << "\n  \"#{src(f)}\" -> \"#{trg(f)}\";"
     end
     result << "\n}"
     result
