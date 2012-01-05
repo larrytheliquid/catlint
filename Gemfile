@@ -4,6 +4,7 @@ source :rubygems
 gem 'rake'
 gem 'sinatra-flash', :require => 'sinatra/flash'
 gem 'pg'
+gem 'json'
 
 # Component requirements
 gem 'sass'

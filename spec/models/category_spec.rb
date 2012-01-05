@@ -4,16 +4,54 @@ describe "A category" do
   let(:ident) { Category.example_id }
   let(:hom) { Category.example_hom }
   let(:comp) { Category.example_comp }
+  let(:options) {{ :id => ident, :hom => hom, :comp => comp }}
 
   it "can be valid" do
-    Category.new(ident, hom, comp)    
+    Category.new(options)
+  end
+
+  it "json printing and parsing are isomorphic" do
+    cat = Category.example
+    Category.parse_json(cat.to_json)
+  end
+
+  it "validates that the identity function is specified" do
+    options.delete :id
+
+    lambda do
+      Category.new(options)
+    end.should raise_error(/options must include identity function/i)
+  end
+
+  it "validates that the hom relation is specified" do
+    options.delete :hom
+
+    lambda do
+      Category.new(options)
+    end.should raise_error(/options must include hom relation/i)
+  end
+
+  it "validates that the composition function is specified" do
+    options.delete :comp
+
+    lambda do
+      Category.new(options)
+    end.should raise_error(/options must include composition function/i)
+  end
+
+  it "validates that extraneous options are not included" do
+    options[:foo] = :bar
+
+    lambda do
+      Category.new(options)
+    end.should raise_error(/extraneous options disalowed/i)
   end
 
   it "validates that hom keys are pairs" do
     hom[nil] = []
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/hom key must be a pair/i)
   end
 
@@ -21,7 +59,7 @@ describe "A category" do
     hom[[:residence, :residence]] = nil
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/hom value must be a pair/i)
   end
 
@@ -29,13 +67,13 @@ describe "A category" do
     comp[nil] = :foo
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/comp key must be a pair/i)
   end
 
   it "validates that every object is unique" do
     # lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     # end.should raise_error(/duplicate object/i)
   end
 
@@ -43,7 +81,7 @@ describe "A category" do
     hom[[:home_business, :residence]] = [:home_business_is_a_residence, :home_business_is_a_residence]
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/duplicate arrow/i)
   end
 
@@ -51,19 +89,19 @@ describe "A category" do
     hom.delete [:residence, :residence]
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/identity not a morphism/i)
   end
 
   it "validates that every arrow has a source" do
     # lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     # end.should raise_error(/arrow without source/i)
   end
 
   it "validates that every arrow has a target" do
     # lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     # end.should raise_error(/arrow without target/i)
   end
 
@@ -71,7 +109,7 @@ describe "A category" do
     hom[[:foo, :residence]] = [:bar]
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/source is not an object/i)
   end
 
@@ -79,7 +117,7 @@ describe "A category" do
     hom[[:home_business, :foo]] = [:bar]
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/target is not an object/i)
   end
 
@@ -88,7 +126,7 @@ describe "A category" do
     hom[[:business, :residence]] = [:residence_ident]
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/identity not an endomorphism/i)
   end
 
@@ -97,7 +135,7 @@ describe "A category" do
     hom[[:residence, :business]] = [:residence_ident]
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/identity not an endomorphism/i)
   end
 
@@ -105,7 +143,7 @@ describe "A category" do
     comp[[:home_business_is_a_residence, :residence_is_a_house]] = :home_business_is_a_residence_house
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/composition of arrows that do not compose/i)
   end
 
@@ -113,7 +151,7 @@ describe "A category" do
     comp.delete [:residence_is_a_house, :home_business_is_a_residence]
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/composition not defined/i)
   end
 
@@ -121,7 +159,7 @@ describe "A category" do
     comp[[:residence_is_a_house, :home_business_is_a_residence]] = :residence_is_a_house
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/composition source mismatch/i)
   end
 
@@ -129,7 +167,7 @@ describe "A category" do
     comp[[:residence_is_a_house, :home_business_is_a_residence]] = :home_business_is_a_business
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/composition target mismatch/i)
   end
 
@@ -137,7 +175,7 @@ describe "A category" do
     comp[[:home_business_is_a_residence_house, :home_business_ident]] = :home_business_is_a_business_house
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/source identity law/i)
   end
 
@@ -145,7 +183,7 @@ describe "A category" do
     comp[[:house_ident, :home_business_is_a_residence_house]] = :home_business_is_a_business_house
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/target identity law/i)
   end
 
@@ -166,7 +204,7 @@ describe "A category" do
     comp[[:residence_is_a_residence2, :home_business_is_a_residence2]] = :home_business_is_a_residence
 
     lambda do
-      Category.new(ident, hom, comp)
+      Category.new(options)
     end.should raise_error(/composition associativity law/i)
   end
 end

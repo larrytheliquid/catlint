@@ -1,10 +1,9 @@
-require 'uri'
 class Category
+  ARROW = "->"
   Error = Class.new StandardError
 
-  def initialize(id, hom, comp)
-    @id, @hom, @comp = id.freeze, hom.freeze, comp.freeze
-
+  def initialize(opts)
+    @id, @hom, @comp = parse_options opts
     validate_syntax
 
     @src, @trg = {}, {}
@@ -47,6 +46,55 @@ class Category
     end.flatten
   end
 
+  def to_hash
+    {:id => @id, :hom => @hom, :comp => @comp}
+  end
+
+  def to_json
+    opts = to_hash
+    result = {:id => opts[:id], :hom => {}, :comp => {}}
+
+    opts[:hom].each do |k, v|
+      result[:hom][k.join(ARROW)] = v
+    end
+
+    opts[:comp].each do |k, v|
+      result[:comp][k.join(ARROW)] = v
+    end
+
+    result.to_json
+  end
+
+  def self.parse_json(json)
+    if json.empty?
+      raise Error, "JSON empty"
+    end
+
+    opts = JSON.parse json
+
+    if id = opts.delete("id")
+      opts[:id] = id
+    end
+
+    if hom = opts.delete("hom")
+      opts[:hom] = {}
+      hom.each do |k, v|
+        opts[:hom][k.split(ARROW)] = v
+      end
+    end
+
+    if comp = opts.delete("comp")
+      opts[:comp] = {}
+      comp.each do |k, v|
+        opts[:comp][k.split(ARROW)] = v
+      end
+    end
+
+    new opts
+  rescue JSON::ParserError => e
+    raise Error, "invalid JSON"
+  end
+
   def to_dot
     result = "digraph category {"
     arrows.each do |f|
@@ -66,21 +114,44 @@ class Category
 
   private
 
+  def parse_options(opts)
+    unless opts.key? :id
+      raise Error, "options must include identity function 'id'"
+    end
+
+    unless opts.key? :hom
+      raise Error, "options must include hom relation 'hom'"
+    end
+
+    unless opts.key? :comp
+      raise Error, "options must include composition function 'comp'"
+    end
+
+    extras = opts.keys - [:id, :hom, :comp]
+    unless extras.empty?
+      desc = "\n#{extras.first}"
+      raise Error, "extraneous options disalowed:#{desc}"
+    end
+
+    [opts[:id].freeze, opts[:hom].freeze, opts[:comp].freeze]
+  end
+
   def validate_syntax
     @hom.keys.each do |k|
-      unless k.kind_of?(Array) && k.size == 2
-        raise Error, "hom key must be a pair"
+      unless k.kind_of?(Enumerable) && k.count == 2
+        desc = "\n#{k}"
+        raise Error, "hom key must be a pair:#{desc}"
       end
     end
 
     @hom.values.each do |v|
-      unless v.kind_of?(Array)
+      unless v.kind_of?(Enumerable)
         raise Error, "hom value must be a pair"
       end
     end
 
     @comp.keys.each do |k|
-      unless k.kind_of?(Array) && k.size == 2
+      unless k.kind_of?(Enumerable) && k.count == 2
         raise Error, "comp key must be a pair"
       end
     end
@@ -271,6 +342,14 @@ class Category
       [:business_is_a_house, :home_business_is_a_business] => :home_business_is_a_business_house,
       [:residence_is_a_house, :home_business_is_a_residence] => :home_business_is_a_residence_house,
     }
+  end
+
+  def self.example_options
+    {:id => example_id, :hom => example_hom, :comp => example_comp}
+  end
+
+  def self.example
+    new example_options
   end
 
 end

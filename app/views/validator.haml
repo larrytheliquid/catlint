@@ -5,10 +5,17 @@
       %small category theory validation tool
   .row
     .span14
-      - form_tag '/validator', :method => 'post' do
+      - if @validated && @error
+        .alert-message.error
+          %p= @error
+      - elsif @validated
+        .alert-message.success
+          %p Your category is valid!
+
+      - form_tag url(:validator), :method => :post do
         = label_tag :category
         .input
-          = text_area_tag :category, :class => "xxlarge", :rows => "10"
+          = text_area_tag :category, :value => @category, :class => "xxlarge", :rows => "10"
           %span.help-block
             JSON representation of identities, hom relation, and composition function.
         .actions
