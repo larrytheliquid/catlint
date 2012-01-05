@@ -61,4 +61,8 @@ class Catlint < Padrino::Application
   get :/ do
     File.read(Padrino.root + "/public/index.html")
   end
+
+  get :validator do
+    render :validator
+  end
 end

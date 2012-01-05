@@ -1,0 +1,15 @@
+!!! 5
+%html(lang="en")
+  %head
+    %meta(charset="utf-8")
+    %meta(name="robots" content="noindex,nofollow")
+    %title CatLint
+    = stylesheet_link_tag 'bootstrap.min', 'application'
+    = javascript_include_tag 'jquery'
+  %body
+    .topbar
+      .fill
+        .container
+          %a.brand{:href => url(:validator)} CatLint
+    .container
+      = yield
