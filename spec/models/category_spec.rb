@@ -1,5 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + "/category")
-Bundler.require(:default, :test)
+require 'spec_helper'
 
 describe "A category" do
   let(:ident) { Category.example_id }
