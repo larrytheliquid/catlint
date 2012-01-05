@@ -4,18 +4,21 @@
       Validator
       %small category theory validation tool
   .row
-    .span14
-      - if @validated && @error
+    .span6#left
+      %h3 Result
+      - if @error
         .alert-message.error
           %p= @error
-      - elsif @validated
+      - else
         .alert-message.success
           %p Your category is valid!
+        %img{:src => @category.to_gchart_url, :height => "330", :width => "330"}
 
+    .span9#right
+      %h2 Category
       - form_tag url(:validator), :method => :post do
-        = label_tag :category
         .input
-          = text_area_tag :category, :value => @category, :class => "xxlarge", :rows => "10"
+          = text_area_tag :category, :value => @json, :class => "span9", :rows => "20"
           %span.help-block
             JSON representation of identities, hom relation, and composition function.
         .actions

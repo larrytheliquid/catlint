@@ -63,19 +63,19 @@ class Catlint < Padrino::Application
   end
 
   get :validator do
-    @category = Category.example.to_json
+    @category = Category.example
+    @json = @category.to_json
     render :validator
   end
 
   post :validator do
-    @validated = true
     begin
-      Category.parse_json params[:category]
+      @category = Category.parse_json params[:category]
     rescue Category::Error => e
-      @error = e.message
+      @error = e.message.gsub("\n", "<br/>")
     end
 
-    @category = params[:category]
+    @json = params[:category]
     render :validator
   end
 end
