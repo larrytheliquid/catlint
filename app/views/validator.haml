@@ -6,13 +6,15 @@
   .row
     .span6#left
       %h3 Result
+      - image_size = "340"
       - if @error
         .alert-message.error
           %p= @error
+        %img{:src => "images/catlint.jpg", :height => image_size, :width => image_size}
       - else
         .alert-message.success
           %p Your category is valid!
-        %img{:src => @category.to_gchart_url, :height => "330", :width => "330"}
+        %img{:src => @category.to_gchart_url, :height => image_size, :width => image_size}
 
     .span9#right
       %h2 Category
