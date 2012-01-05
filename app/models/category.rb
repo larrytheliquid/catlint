@@ -1,5 +1,5 @@
 class Category
-  ARROW = "->"
+  SEPARATOR = ":"
   Error = Class.new StandardError
 
   def initialize(opts)
@@ -55,11 +55,11 @@ class Category
     result = {:id => opts[:id], :hom => {}, :comp => {}}
 
     opts[:hom].each do |k, v|
-      result[:hom][k.join(ARROW)] = v
+      result[:hom][k.join(SEPARATOR)] = v
     end
 
     opts[:comp].each do |k, v|
-      result[:comp][k.join(ARROW)] = v
+      result[:comp][k.join(SEPARATOR)] = v
     end
 
     result.to_json
@@ -79,14 +79,14 @@ class Category
     if hom = opts.delete("hom")
       opts[:hom] = {}
       hom.each do |k, v|
-        opts[:hom][k.split(ARROW)] = v
+        opts[:hom][k.split(SEPARATOR)] = v
       end
     end
 
     if comp = opts.delete("comp")
       opts[:comp] = {}
       comp.each do |k, v|
-        opts[:comp][k.split(ARROW)] = v
+        opts[:comp][k.split(SEPARATOR)] = v
       end
     end
 
