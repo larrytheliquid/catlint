@@ -57,4 +57,8 @@ class Catlint < Padrino::Application
   #     render 'errors/505'
   #   end
   #
+
+  get :/ do
+    File.read(Padrino.root + "/public/index.html")
+  end
 end
