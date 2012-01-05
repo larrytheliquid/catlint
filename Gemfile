@@ -3,6 +3,7 @@ source :rubygems
 # Project requirements
 gem 'rake'
 gem 'sinatra-flash', :require => 'sinatra/flash'
+gem 'pg'
 
 # Component requirements
 gem 'sass'

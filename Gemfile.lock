@@ -73,6 +73,7 @@ GEM
     padrino-mailer (0.10.5)
       mail (~> 2.3.0)
       padrino-core (= 0.10.5)
+    pg (0.12.2)
     polyglot (0.3.3)
     rack (1.4.0)
     rack-protection (1.2.0)
@@ -126,6 +127,7 @@ DEPENDENCIES
   dm-validations
   haml
   padrino (= 0.10.5)
+  pg
   rack-test
   rake
   rspec
