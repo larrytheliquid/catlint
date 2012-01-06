@@ -55,12 +55,12 @@ describe "A category" do
     end.should raise_error(/hom key must be a pair/i)
   end
 
-  it "validates that hom values are arrays" do
+  it "validates that hom values are lists" do
     hom[[:residence, :residence]] = nil
 
     lambda do
       Category.new(options)
-    end.should raise_error(/hom value must be a pair/i)
+    end.should raise_error(/hom value must be a list/i)
   end
 
   it "validates that comp keys are pairs" do
@@ -137,6 +137,33 @@ describe "A category" do
     lambda do
       Category.new(options)
     end.should raise_error(/identity not an endomorphism/i)
+  end
+
+  it "validates that every left composite is an arrow" do
+    comp.delete [:residence_is_a_house, :home_business_is_a_residence]
+    comp[[:foo, :home_business_is_a_residence]] = :home_business_is_a_residence_house
+
+    lambda do
+      Category.new(options)
+    end.should raise_error(/left composite not an arrow/i)
+  end
+
+  it "validates that every right composite is an arrow" do
+    comp.delete [:residence_is_a_house, :home_business_is_a_residence]
+    comp[[:residence_is_a_house, :foo]] = :home_business_is_a_residence_house
+
+    lambda do
+      Category.new(options)
+    end.should raise_error(/right composite not an arrow/i)
+  end
+
+  it "validates that every composite result is an arrow" do
+    comp.delete [:residence_is_a_house, :home_business_is_a_residence]
+    comp[[:residence_is_a_house, :home_business_is_a_residence]] = :foo
+
+    lambda do
+      Category.new(options)
+    end.should raise_error(/composite result not an arrow/i)
   end
 
   it "validates that composition is not defined for uncomposable arrows" do

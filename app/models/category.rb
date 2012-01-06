@@ -24,8 +24,9 @@ class Category
     validate_sources_and_targets_are_objects
     validate_identities_are_endomorphisms
 
+    validate_comp_defined_with_arrows
     validate_comp_composable
-    validate_comp_defined_for_arrows
+    validate_comp_defined_for_composable_arrows
     validate_comp_preserves_sources_and_targets
 
     validate_identity_laws
@@ -146,7 +147,7 @@ class Category
 
     @hom.values.each do |v|
       unless v.kind_of?(Enumerable)
-        raise Error, "hom value must be a pair"
+        raise Error, "hom value must be a list"
       end
     end
 
@@ -222,6 +223,24 @@ class Category
     end
   end
 
+  def validate_comp_defined_with_arrows
+    @comp.each do |(g, f), gof|
+      desc = "\n#{g} . #{f} = #{gof}"
+
+      unless arrows.include? g
+        raise Error, "left composite not an arrow:#{desc}"
+      end
+
+      unless arrows.include? f
+        raise Error, "right composite not an arrow:#{desc}"
+      end
+
+      unless arrows.include? gof
+        raise Error, "composite result not an arrow:#{desc}"
+      end
+    end
+  end
+
   def validate_comp_composable
     @comp.each do |(g, f), gof|
       unless src(g) == trg(f)
@@ -233,7 +252,7 @@ class Category
     end
   end
 
-  def validate_comp_defined_for_arrows
+  def validate_comp_defined_for_composable_arrows
     arrows.each do |f|
       from(trg(f)).each do |g|
         unless @comp.key? [g, f]
