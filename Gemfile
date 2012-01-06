@@ -21,6 +21,7 @@ gem 'rspec'
 group :test do
   gem 'rack-test', :require => "rack/test"
   gem 'ruby-debug19'
+  gem 'capybara'
 end
 
 gem 'padrino', '0.10.5'
