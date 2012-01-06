@@ -6,6 +6,8 @@ class Catlint < Padrino::Application
 
   enable :sessions
 
+  HIDDEN_PATH = '96A77B38-6E2E-419F-9EC8-BFBA91BBDCC0'
+
   ##
   # Caching support
   #
@@ -62,13 +64,13 @@ class Catlint < Padrino::Application
     File.read(Padrino.root + "/public/index.html")
   end
 
-  get :validator do
+  get :validator, :map => HIDDEN_PATH do
     @category = Category.example
     @json = @category.to_json
     render :validator
   end
 
-  post :validator do
+  post :validator, :map => HIDDEN_PATH do
     begin
       @category = Category.parse_json params[:category]
     rescue Category::Error => e
