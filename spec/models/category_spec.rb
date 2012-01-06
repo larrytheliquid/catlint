@@ -12,7 +12,7 @@ describe "A category" do
 
   it "json printing and parsing are isomorphic" do
     cat = Category.example
-    Category.parse_json(cat.to_json)
+    Category.parse_json_options(*cat.to_json_options)
   end
 
   it "validates that the identity function is specified" do

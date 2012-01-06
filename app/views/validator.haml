@@ -1,11 +1,10 @@
 .content
   .page-header
     %h1
-      Validator
+      Category Validator
       %small category theory validation tool
   .row
     .span6#left
-      %h3 Result
       - image_size = "340"
       - if @error
         .alert-message.error
@@ -17,11 +16,20 @@
         %img{:src => @category.to_gchart_url, :height => image_size, :width => image_size}
 
     .span9#right
-      %h2 Category
       - form_tag url(:validator), :method => :post do
-        .input
-          = text_area_tag :category, :value => @json, :class => "span9", :rows => "20"
-          %span.help-block
-            JSON representation of identity function, hom relation, and composition function.
+        - text_class = "span9"
+        - label_class = "label"
+        .clearfix
+          = label_tag :id, :caption => "identity function", :class => label_class
+          .input
+            = text_area_tag :id, :value => @id, :class => text_class, :rows => "3"
+        .clearfix
+          = label_tag :hom, :caption => "hom set relation", :class => label_class
+          .input
+            = text_area_tag :hom, :value => @hom, :class => text_class, :rows => "7"
+        .clearfix
+          = label_tag :comp, :caption => "composition function", :class => label_class
+          .input
+            = text_area_tag :comp, :value => @comp, :class => text_class, :rows => "8"
         .actions
           %input.btn.large.primary(type="submit" value="Validate")

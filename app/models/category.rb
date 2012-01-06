@@ -51,49 +51,60 @@ class Category
     {:id => @id, :hom => @hom, :comp => @comp}
   end
 
-  def to_json
-    opts = to_hash
-    result = {:id => opts[:id], :hom => {}, :comp => {}}
+  def to_json_options
+    id_json = @id
+    hom_json = {}
+    comp_json = {}
 
-    opts[:hom].each do |k, v|
-      result[:hom][k.join(SEPARATOR)] = v
+    @hom.each do |k, v|
+      hom_json[k.join(SEPARATOR)] = v
     end
 
-    opts[:comp].each do |k, v|
-      result[:comp][k.join(SEPARATOR)] = v
+    @comp.each do |k, v|
+      comp_json[k.join(SEPARATOR)] = v
     end
 
-    result.to_json
+    [id_json.to_json, hom_json.to_json, comp_json.to_json]
   end
 
-  def self.parse_json(json)
-    if json.empty?
-      raise Error, "JSON empty"
+  def self.parse_json_options(id_json, hom_json, comp_json)
+    if id_json.empty?
+      raise Error, "identity function JSON empty"
     end
 
-    opts = JSON.parse json
-
-    if id = opts.delete("id")
-      opts[:id] = id
+    if hom_json.empty?
+      raise Error, "hom set relation JSON empty"
     end
 
-    if hom = opts.delete("hom")
-      opts[:hom] = {}
-      hom.each do |k, v|
-        opts[:hom][k.split(SEPARATOR)] = v
+    if comp_json.empty?
+      raise Error, "composition function JSON empty"
+    end
+
+    begin
+      id = JSON.parse id_json
+    rescue JSON::ParserError => e
+      raise Error, "invalid identity function JSON"
+    end
+
+    begin
+      hom = JSON.parse hom_json
+      hom.keys.each do |k|
+        hom[k.split(SEPARATOR)] = hom.delete(k)
       end
+    rescue JSON::ParserError => e
+      raise Error, "invalid hom set relation JSON"
     end
 
-    if comp = opts.delete("comp")
-      opts[:comp] = {}
-      comp.each do |k, v|
-        opts[:comp][k.split(SEPARATOR)] = v
+    begin
+      comp = JSON.parse comp_json
+      comp.keys.each do |k|
+        comp[k.split(SEPARATOR)] = comp.delete(k)
       end
+    rescue JSON::ParserError => e
+      raise Error, "invalid composition function JSON"
     end
 
-    new opts
-  rescue JSON::ParserError => e
-    raise Error, "invalid JSON"
+    new :id => id, :hom => hom, :comp => comp
   end
 
   def to_dot
