@@ -50,5 +50,9 @@ body {
 .topbar .btn {
   border: 0; }
 
+.label {
+  text-align: center;
+}
+
 th {
   white-space: nowrap; }
