@@ -4,32 +4,38 @@
       Category Validator
       %small category theory validation tool
   .row
-    .span6#left
-      - image_size = "340"
-      - if @error
-        .alert-message.error
-          %p= @error
-        %img{:src => "images/catlint.jpg", :height => image_size, :width => image_size}
-      - else
-        .alert-message.success
-          %p Your category is valid!
-        %img{:src => @category.to_gchart_url, :height => image_size, :width => image_size}
-
-    .span9#right
+    .span16#right
       - form_tag url(:validator), :method => :post do
-        - text_class = "span9"
-        - label_class = "label"
-        .clearfix
-          = label_tag :id, :caption => "identity function", :class => label_class
-          .input
-            = text_area_tag :id, :value => @id, :class => text_class, :rows => "3"
-        .clearfix
-          = label_tag :hom, :caption => "hom set relation", :class => label_class
-          .input
-            = text_area_tag :hom, :value => @hom, :class => text_class, :rows => "7"
-        .clearfix
-          = label_tag :comp, :caption => "composition function", :class => label_class
-          .input
-            = text_area_tag :comp, :value => @comp, :class => text_class, :rows => "8"
-        .actions
-          %input.btn.large.primary(type="submit" value="Validate")
+        -# %h3 Idendity Function
+        -# - Category.example_id.each do |x, f|
+        -#   .equation
+        -#     .input
+        -#       = input_tag :id, :value => x
+        -#       %span.equation-text =
+        -#       = input_tag :id, :value => f
+
+        %h3 Morphism Types
+        - Category.example_hom.each do |(src, trg), fs|
+          - fs.each do |f|
+            - next if f.to_s.include?('_ident')
+            .equation
+              .input
+                = input_tag :id, :value => f
+                %span.equation-text :
+                = input_tag :id, :value => src
+                %span.equation-text &rarr;
+                = input_tag :id, :value => trg
+
+        %h3 Composition Function
+        - Category.example_comp.each do |(g, f), gof|
+          - next if g.to_s.include?('_ident')
+          - next if f.to_s.include?('_ident')
+          .equation
+            .input
+              = input_tag :id, :value => g
+              %span.equation-text &#8728;
+              = input_tag :id, :value => f
+              %span.equation-text =
+              = input_tag :id, :value => gof
+      .actions
+        %input.btn.large.primary(type="submit" value="Validate")
