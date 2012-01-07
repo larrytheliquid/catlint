@@ -33,6 +33,27 @@ class Category
     validate_associativity_law
   end
 
+  def self.infer(hom, comp)
+    objects = hom.keys.flatten.uniq
+
+    id = {}
+    objects.each do |x|
+      idx = "#{x}_ident".to_sym
+      id[x] = idx
+      hom[[x, x]] ||= []
+      hom[[x, x]].push idx
+    end
+
+    hom.each do |(x, y), fs|
+      fs.each do |f|
+        comp[[f, id[x]]] = f
+        comp[[id[y], f]] = f
+      end
+    end
+
+    new :id => id, :hom => hom, :comp => comp
+  end
+
   def objects() @objects ||= @id.keys end
   def arrows() @arrows ||= @hom.values.flatten end
   def id(obj) @id.fetch obj end
