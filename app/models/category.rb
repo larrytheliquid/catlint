@@ -34,6 +34,7 @@ class Category
   end
 
   def self.infer(hom, comp)
+    hom, comp = hom.dup, comp.dup
     objects = hom.keys.flatten.uniq
 
     id = {}
@@ -55,13 +56,18 @@ class Category
   end
 
   def hom_without_id
-    @hom.reject do |_, fs|
-      fs.any?{|f| f.to_s.include?('_ident') }
+    result = {}
+    @hom.each do |(src, trg), fs|
+      result[[src, trg]] ||= []
+      fs.each do |f|
+        result[[src, trg]] << f unless f.to_s.include?('_ident')
+      end
     end
+    result
   end
 
   def comp_without_id
-    @comp.reject do |(g, f), _|
+    @comp.reject do |(g, f), gof|
       g.to_s.include?('_ident') || f.to_s.include?('_ident')
     end
   end
