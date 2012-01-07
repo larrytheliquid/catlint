@@ -13,15 +13,26 @@ class Catlint < Padrino::Application
 
   get :validator, :map => HIDDEN_PATH do
     @category = Category.example
-    @id, @hom, @comp = @category.to_json_options
+    @hom = @category.hom_without_id
+    @comp = @category.comp_without_id
+
     render :validator
   end
 
   post :validator, :map => HIDDEN_PATH do
-    @id, @hom, @comp = params[:id], params[:hom], params[:comp]
+    @hom, @comp = {}, {}
+
+    params[:hom_f].each_with_index do |f, i|
+      @hom[[params[:hom_src][i], params[:hom_trg][i]]] ||= []
+      @hom[[params[:hom_src][i], params[:hom_trg][i]]] << f
+    end
+
+    params[:comp_gof].each_with_index do |gof, i|
+      @comp[[params[:comp_g][i], params[:comp_f][i]]] = gof
+    end
 
     begin
-      @category = Category.parse_json_options @id, @hom, @comp
+      @category = Category.infer @hom, @comp
     rescue Category::Error => e
       @error = e.message.gsub("\n", "<br/>")
     end

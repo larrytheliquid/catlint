@@ -5,37 +5,33 @@
       %small category theory validation tool
   .row
     .span16#right
-      - form_tag url(:validator), :method => :post do
-        -# %h3 Idendity Function
-        -# - Category.example_id.each do |x, f|
-        -#   .equation
-        -#     .input
-        -#       = input_tag :id, :value => x
-        -#       %span.equation-text =
-        -#       = input_tag :id, :value => f
+      - if @error
+        .alert-message.error
+          %p= @error
+      - else
+        .alert-message.success
+          %p Your category is valid!
 
+      - form_tag url(:validator), :method => :post do
         %h3 Morphism Types
-        - Category.example_hom.each do |(src, trg), fs|
+        - @hom.each do |(src, trg), fs|
           - fs.each do |f|
-            - next if f.to_s.include?('_ident')
             .equation
               .input
-                = input_tag :id, :value => f
+                = text_field_tag "hom_f[]", :value => f
                 %span.equation-text :
-                = input_tag :id, :value => src
+                = text_field_tag "hom_src[]", :value => src
                 %span.equation-text &rarr;
-                = input_tag :id, :value => trg
+                = text_field_tag "hom_trg[]", :value => trg
 
         %h3 Composition Function
-        - Category.example_comp.each do |(g, f), gof|
-          - next if g.to_s.include?('_ident')
-          - next if f.to_s.include?('_ident')
+        - @comp.each do |(g, f), gof|
           .equation
             .input
-              = input_tag :id, :value => g
+              = text_field_tag "comp_g[]", :value => g
               %span.equation-text &#8728;
-              = input_tag :id, :value => f
+              = text_field_tag "comp_f[]", :value => f
               %span.equation-text =
-              = input_tag :id, :value => gof
-      .actions
-        %input.btn.large.primary(type="submit" value="Validate")
+              = text_field_tag "comp_gof[]", :value => gof
+        .actions
+          %input.btn.large.primary(type="submit" value="Validate")

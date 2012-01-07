@@ -20,7 +20,7 @@ describe "the category validator" do
     page.should have_selector(".alert-message.success")
   end
 
-  %w[id hom comp].each do |option|
+  %w[hom_f[] hom_src[] hom_trg[] comp_g[] comp_f[] comp_gof[]].each do |option|
     it "displays a validation error for an invalid #{option}" do
       fill_in option, :with => "foo"
       click_on "Validate"

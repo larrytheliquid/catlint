@@ -54,6 +54,18 @@ class Category
     new :id => id, :hom => hom, :comp => comp
   end
 
+  def hom_without_id
+    @hom.reject do |_, fs|
+      fs.any?{|f| f.to_s.include?('_ident') }
+    end
+  end
+
+  def comp_without_id
+    @comp.reject do |(g, f), _|
+      g.to_s.include?('_ident') || f.to_s.include?('_ident')
+    end
+  end
+
   def objects() @objects ||= @id.keys end
   def arrows() @arrows ||= @hom.values.flatten end
   def id(obj) @id.fetch obj end
