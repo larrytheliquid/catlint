@@ -13,7 +13,7 @@
           %p Your category is valid!
 
       - form_tag url(:validator), :method => :post do
-        %h3 Morphism Types #{link_to "+", "#", :class => "add-morphism"}
+        %h3 Morphism Types #{link_to "+", "#_", :class => "add-morphism"}
         #morphisms
           - @hom.each do |(src, trg), fs|
             - fs.each do |f|
@@ -24,9 +24,9 @@
                   = text_field_tag "hom_src[]", :value => src
                   %span.equation-text &rarr;
                   = text_field_tag "hom_trg[]", :value => trg
-                  %a.remove-equation(href="#") x
+                  %a.remove-equation(href="#_") x
 
-        %h3 Composition Function #{link_to "+", "#", :class => "add-comp"}
+        %h3 Composition Function #{link_to "+", "#_", :class => "add-comp"}
         #comp
           - @comp.each do |(g, f), gof|
             .equation
@@ -36,6 +36,6 @@
                 = text_field_tag "comp_f[]", :value => f
                 %span.equation-text =
                 = text_field_tag "comp_gof[]", :value => gof
-                %a.remove-equation(href="#") x
+                %a.remove-equation(href="#_") x
         .actions
           %input.btn.large.primary(type="submit" value="Validate")
