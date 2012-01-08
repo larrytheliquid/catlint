@@ -13,6 +13,9 @@
       - else
         .alert-message.success
           %p Your category is valid!
+        %h3.nav.btn.large.span4 Objects: #{@category.objects.size}
+        %h3.nav.btn.large.span4 Morphisms: #{@category.arrows.size}
+        %h3.nav.btn.large.span4 Compositions: #{@category.comps.size}
         %img{:src => @category.to_gchart_url, :height => image_size, :width => image_size}
 
     .span10#right

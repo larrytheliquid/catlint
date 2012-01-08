@@ -78,6 +78,7 @@ class Category
   def id(obj) @id.fetch obj end
   def hom(x, y) @hom[[x, y]] || [] end
   def comp(g, f) @comp.fetch [g, f] end
+  def comps() @comp.keys.size end
   def src(f) @src.fetch f end
   def trg(f) @trg.fetch f end
 
