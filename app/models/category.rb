@@ -33,6 +33,7 @@ class Category
     validate_associativity_law
   end
 
+  # TODO: handle blank data
   def self.infer(hom, comp)
     hom, comp = hom.dup, comp.dup
     objects = hom.keys.flatten.uniq

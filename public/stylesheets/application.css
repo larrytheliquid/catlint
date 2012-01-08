@@ -58,6 +58,13 @@ body {
   zoom: 1; }
 
 .equation-text {
+  cursor: default;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
   color: #BFBFBF;
   font-size: 150%;
   font-weight: 900; }
@@ -67,3 +74,8 @@ h3 {
 
 th {
   white-space: nowrap; }
+
+ul {
+  padding: 0px;
+  margin: 0px;
+  list-style-type: none; }

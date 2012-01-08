@@ -22,4 +22,9 @@ $(document).ready(function(){
     morphism.find(".remove-equation").click(removeEquation);
     $("#comp").append(morphism);
   });
+
+  $("#morphisms").sortable()
+  $("#morphisms").disableSelection();
+  $("#comp").sortable()
+  $("#morphisms").disableSelection();
 });
