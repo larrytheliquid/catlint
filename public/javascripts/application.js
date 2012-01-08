@@ -11,7 +11,7 @@ $(document).ready(function(){
     event.preventDefault();
     var morphism = $("#morphisms .equation").first().clone();
     morphism.find("input").attr("value", "");
-    morphism.click(removeEquation);
+    morphism.find(".remove-equation").click(removeEquation);
     $("#morphisms").append(morphism);
   });
 
@@ -19,6 +19,7 @@ $(document).ready(function(){
     event.preventDefault();
     var morphism = $("#comp .equation").first().clone();
     morphism.find("input").attr("value", "");
+    morphism.find(".remove-equation").click(removeEquation);
     $("#comp").append(morphism);
   });
 });
