@@ -54,17 +54,17 @@ body {
   text-align: center; }
 
 .equation {
-  margin-bottom: 10px;
-  zoom: 1; }
-
-.equation-text {
-  cursor: default;
+  cursor: move;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   -o-user-select: none;
   user-select: none;
+  margin-bottom: 10px;
+  zoom: 1; }
+
+.equation-text {
   color: #BFBFBF;
   font-size: 150%;
   font-weight: 900; }

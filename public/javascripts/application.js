@@ -23,8 +23,8 @@ $(document).ready(function(){
     $("#comp").append(morphism);
   });
 
-  $("#morphisms").sortable()
+  $("#morphisms").sortable();
   $("#morphisms").disableSelection();
-  $("#comp").sortable()
+  $("#comp").sortable();
   $("#morphisms").disableSelection();
 });
