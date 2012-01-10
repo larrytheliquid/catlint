@@ -1,7 +1,7 @@
 .content
   .page-header
     %h1
-      Category Validator
+      Morphisms
       %small category theory validation tool
   .row
     .span5#left
@@ -15,33 +15,18 @@
           %p Your category is valid!
         %h3.nav.btn.large.span4 Objects: #{@category.objects.size}
         %h3.nav.btn.large.span4 Morphisms: #{@category.arrows.size}
-        %h3.nav.btn.large.span4 Compositions: #{@category.comps.size}
         %img{:src => @category.to_gchart_url, :height => image_size, :width => image_size}
 
     .span10#right
       - form_tag url(:validator), :method => :post do
         - field_class = "span3"
-        %h3 Morphism Types #{link_to "+", "#_", :class => "add-morphism btn"}
-        %ul#morphisms
-          - @hom.each do |(src, trg), fs|
-            - fs.each do |f|
-              %li.equation.input
-                = text_field_tag "hom_f[]", :value => f, :class => field_class
-                %span.equation-text :
-                = text_field_tag "hom_src[]", :value => src, :class => field_class
-                %span.equation-text &rarr;
-                = text_field_tag "hom_trg[]", :value => trg, :class => field_class
-                %a.remove-equation.btn(href="#_") x
+        .equation.input
+          = text_field_tag "hom_f", :placeholder => "morphism", :value => "", :class => field_class, :id => "hom_f"
+          %span.equation-text :
+          = text_field_tag "hom_src", :placeholder => "source", :value => "", :class => field_class, :id => "hom_src"
+          %span.equation-text &rarr;
+          = text_field_tag "hom_trg", :placeholder => "target", :value => "", :class => field_class, :id => "hom_trg"
+          %a#add-morphism.btn(href="#_") +
 
-        %h3 Composition Function #{link_to "+", "#_", :class => "add-comp btn"}
-        %ul#comp
-          - @comp.each do |(g, f), gof|
-            %li.equation.input
-              = text_field_tag "comp_g[]", :value => g, :class => field_class
-              %span.equation-text &#8728;
-              = text_field_tag "comp_f[]", :value => f, :class => field_class
-              %span.equation-text =
-              = text_field_tag "comp_gof[]", :value => gof, :class => field_class
-              %a.remove-equation.btn(href="#_") x
-        .actions
-          %input.btn.large.primary(type="submit" value="Validate")
+        %ul#morphisms
+
