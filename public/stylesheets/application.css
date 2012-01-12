@@ -64,6 +64,9 @@ body {
   margin-bottom: 10px;
   zoom: 1; }
 
+.equation .span2 {
+  width: 130px; }
+
 .equation-text {
   color: #BFBFBF;
   font-size: 150%;
