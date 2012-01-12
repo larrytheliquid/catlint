@@ -22,13 +22,23 @@ $(function(){
 
     template: _.template($("#morphism-template").html()),
 
+    events: {
+      "click .remove-morphism": "destroy",
+    },
+
     initialize: function() {
       this.model.bind("change", this.render, this);
+      this.model.bind("destroy", this.remove, this);
     },
 
     render: function() {
       $(this.el).html(this.template(this.model.toJSON()));
       return this;
+    },
+
+    destroy: function(event) {
+      event.preventDefault();
+      this.model.destroy();
     },
 
   });

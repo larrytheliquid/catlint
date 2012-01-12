@@ -36,11 +36,9 @@
 
         %script(type="text/template" id="morphism-template")
           .equation
-            = "<%= name %>"
+            %span.btn.span2.info <%= name %>
             %span.equation-text :
-            = "<%= source %>"
+            %span.btn.span2.info <%= source %>
             %span.equation-text &rarr;
-            = "<%= target %>"
-
-
-
+            %span.btn.span2.info <%= target %>
+            %a.remove-morphism.btn(href="#_") x
