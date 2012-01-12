@@ -12,6 +12,12 @@ $(function(){
       return morphism.get("name");
     },
 
+    objects: function() {
+      return _.uniq(_.flatten(this.map(function(x) {
+        return [x.get("source"), x.get("target")];
+      })));
+    },
+
   });
 
   window.Morphisms = new MorphismCollection;
@@ -66,6 +72,7 @@ $(function(){
 
     render: function() {
       this.$("#stats").html(this.statsTemplate({
+        objectsCount: Morphisms.objects().length,
         morphismsCount: Morphisms.length,
       }));
       return this;
