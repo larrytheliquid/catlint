@@ -3,7 +3,7 @@
     %h1
       Morphisms
       %small category theory validation tool
-  .row
+  .row#app
     .span5#left
       - image_size = "280"
       - if @error
@@ -13,8 +13,7 @@
       - else
         .alert-message.success
           %p Your category is valid!
-        %h3.nav.btn.large.span4 Objects: #{@category.objects.size}
-        %h3.nav.btn.large.span4 Morphisms: #{@category.arrows.size}
+        #stats
         %img{:src => @category.to_gchart_url, :height => image_size, :width => image_size}
 
     .span10#right
@@ -29,4 +28,19 @@
           %a#add-morphism.btn(href="#_") +
 
         %ul#morphisms
+
+        %script(type="text/template" id="stats-template")
+          -# %h3.nav.btn.large.span4 Objects: <%= objectsCount %>
+          %h3.nav.btn.large.span4 Morphisms: <%= morphismsCount %>
+
+
+        %script(type="text/template" id="morphism-template")
+          .equation
+            = "<%= name %>"
+            %span.equation-text :
+            = "<%= source %>"
+            %span.equation-text &rarr;
+            = "<%= target %>"
+
+
 

@@ -20,15 +20,14 @@ $(function(){
 
     tagName: "li",
 
-    // template: _.template($("#morphism-template").html()),
+    template: _.template($("#morphism-template").html()),
 
     initialize: function() {
       this.model.bind("change", this.render, this);
     },
 
     render: function() {
-      // $(this.el).html(this.template(this.model.toJSON()));
-      $(this.el).html("foo");
+      $(this.el).html(this.template(this.model.toJSON()));
       return this;
     },
 
@@ -36,7 +35,9 @@ $(function(){
 
   window.AppView = Backbone.View.extend({
 
-    el: $("#right"),
+    el: $("#app"),
+
+    statsTemplate: _.template($('#stats-template').html()),
 
     events: {
       "click #add-morphism": "createMorphism",
@@ -48,11 +49,25 @@ $(function(){
       this.target = this.$("#hom_trg");
 
       Morphisms.bind("add", this.addMorphism, this);
+      Morphisms.bind("all", this.render, this);
+
+      Morphisms.fetch({add: true});
+    },
+
+    render: function() {
+      this.$("#stats").html(this.statsTemplate({
+        morphismsCount: Morphisms.length,
+      }));
+      return this;
     },
 
     addMorphism: function(morphism) {
       var view = new MorphismView({model: morphism});
       this.$("#morphisms").append(view.render().el);
+    },
+
+    addAll: function() {
+      Morphisms.each(this.addMorphism);
     },
 
     createMorphism: function(event) {
