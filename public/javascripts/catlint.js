@@ -16,7 +16,7 @@ $(function(){
       return _.uniq(_.flatten(this.map(function(x) {
         return [x.get("source"), x.get("target")];
       })));
-    },
+    }
 
   });
 
@@ -29,7 +29,7 @@ $(function(){
     template: _.template($("#morphism-template").html()),
 
     events: {
-      "click .remove-morphism": "destroy",
+      "click .remove-morphism": "destroy"
     },
 
     initialize: function() {
@@ -45,7 +45,7 @@ $(function(){
     destroy: function(event) {
       event.preventDefault();
       this.model.destroy();
-    },
+    }
 
   });
 
@@ -56,7 +56,7 @@ $(function(){
     statsTemplate: _.template($('#stats-template').html()),
 
     events: {
-      "click #add-morphism": "createMorphism",
+      "click #add-morphism": "createMorphism"
     },
 
     initialize: function() {
@@ -73,7 +73,7 @@ $(function(){
     render: function() {
       this.$("#stats").html(this.statsTemplate({
         objectsCount: Morphisms.objects().length,
-        morphismsCount: Morphisms.length,
+        morphismsCount: Morphisms.length
       }));
       return this;
     },
@@ -93,13 +93,13 @@ $(function(){
       Morphisms.create({
         name: this.name.val(),
         source: this.source.val(),
-        target: this.target.val(),
+        target: this.target.val()
       });
 
       this.name.val("");
       this.source.val("");
       this.target.val("");
-    },
+    }
 
   });
 
