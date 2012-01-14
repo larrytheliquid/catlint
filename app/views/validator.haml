@@ -29,10 +29,12 @@
 
         %ul#morphisms
 
+        %ul#compositions
+
         %script(type="text/template" id="stats-template")
           %h3.nav.btn.large.span4 Objects: <%= objectsCount %>
           %h3.nav.btn.large.span4 Morphisms: <%= morphismsCount %>
-
+          %h3.nav.btn.large.span4 Compositions: <%= compositionsCount %>
 
         %script(type="text/template" id="morphism-template")
           .equation
@@ -42,3 +44,12 @@
             %span.equation-text &rarr;
             %span.btn.span2.info <%= target %>
             %a.remove-morphism.btn(href="#_") x
+
+        %script(type="text/template" id="composition-template")
+          .equation
+            %span.btn.span2.info <%= c.left.name %>
+            %span.equation-text o
+            %span.btn.span2.info <%= c.right.name %>
+            %span.equation-text =
+            %span.btn.span2.info <%= c.composite.name %>
+

@@ -43,6 +43,11 @@ body {
   padding-right: 19px;
   border-right: 1px solid #eee; }
 
+#morphisms {
+  margin-bottom: 0;
+  padding-bottom: 19px;
+  border-bottom: 1px solid #eee; }
+
 .content .input {
   margin-left: 0;
   padding-left: 0; }

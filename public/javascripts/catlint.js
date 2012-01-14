@@ -1,5 +1,7 @@
 $(function(){
 
+  /* Models & Collections */
+
   window.Morphism = Backbone.Model.extend({});
 
   window.MorphismCollection = Backbone.Collection.extend({
@@ -21,6 +23,34 @@ $(function(){
   });
 
   window.Morphisms = new MorphismCollection;
+
+  window.Composition = Backbone.Model.extend({
+
+    left: function() {
+      return Morphisms.get(this.get("left_id"));
+    },
+
+    right: function() {
+      return Morphisms.get(this.get("right_id"));
+    },
+
+    composite: function() {
+      return Morphisms.get(this.get("composite_id"));
+    }
+
+  });
+
+  window.CompositionCollection = Backbone.Collection.extend({
+
+    model: Composition,
+
+    localStorage: new Store("compositions")
+
+  });
+
+  window.Compositions = new CompositionCollection;
+
+  /* Views */
 
   window.MorphismView = Backbone.View.extend({
 
@@ -49,6 +79,24 @@ $(function(){
 
   });
 
+  window.CompositionView = Backbone.View.extend({
+
+    tagName: "li",
+
+    template: _.template($("#composition-template").html()),
+
+    initialize: function() {
+      this.model.bind("change", this.render, this);
+      this.model.bind("destroy", this.remove, this);
+    },
+
+    render: function() {
+      $(this.el).html(this.template({c: this.model}));
+      return this;
+    }
+
+  });
+
   window.AppView = Backbone.View.extend({
 
     el: $("#app"),
@@ -73,7 +121,8 @@ $(function(){
     render: function() {
       this.$("#stats").html(this.statsTemplate({
         objectsCount: Morphisms.objects().length,
-        morphismsCount: Morphisms.length
+        morphismsCount: Morphisms.length,
+        compositionsCount: Compositions.length
       }));
       return this;
     },
