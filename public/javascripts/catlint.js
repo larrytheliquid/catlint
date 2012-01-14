@@ -2,7 +2,13 @@ $(function(){
 
   /* Models & Collections */
 
-  window.Morphism = Backbone.Model.extend({});
+  window.Morphism = Backbone.Model.extend({
+
+    name: function() { return this.get("name"); },
+    source: function() { return this.get("source"); },
+    target: function() { return this.get("target"); }
+
+  });
 
   window.MorphismCollection = Backbone.Collection.extend({
     
@@ -10,14 +16,33 @@ $(function(){
 
     localStorage: new Store("morphisms"),
 
-    comparator: function(morphism) {
-      return morphism.get("name");
-    },
+    comparator: function(f) { return f.name(); },
 
     objects: function() {
       return _.uniq(_.flatten(this.map(function(x) {
-        return [x.get("source"), x.get("target")];
+        return [x.source(), x.target()];
       })));
+    },
+
+    from: function() {
+      return _(this.objects()).map(function(object) {
+        return object;
+      });
+    },
+
+    toDot: function() {
+      var result = "digraph category { ";
+      this.each(function(f) {
+        result = result + "\"" + f.source() + "\" -> ";
+        result = result + "\"" + f.target() + "\";";
+      });
+      result = result + " }";
+      return result;
+    },
+
+    toGchartUrl: function() {
+      var dotUrl = "http://chart.apis.google.com/chart?cht=gv:circo&chl=";
+      return encodeURI(dotUrl + Morphisms.toDot());
     }
 
   });
@@ -102,6 +127,7 @@ $(function(){
     el: $("#app"),
 
     statsTemplate: _.template($('#stats-template').html()),
+    graphTemplate: _.template($('#graph-template').html()),
 
     events: {
       "click #add-morphism": "createMorphism"
@@ -118,12 +144,26 @@ $(function(){
       Morphisms.fetch({add: true});
     },
 
-    render: function() {
+    renderStats: function() {
       this.$("#stats").html(this.statsTemplate({
         objectsCount: Morphisms.objects().length,
         morphismsCount: Morphisms.length,
         compositionsCount: Compositions.length
       }));
+      return this;
+    },
+
+    renderGraph: function() {
+      // alert(Morphisms.toGchartUrl());
+      this.$("#graph").html(this.graphTemplate({
+        dot: Morphisms.toGchartUrl()
+      }));
+      return this;
+    },
+
+    render: function() {
+      this.renderStats();
+      this.renderGraph();
       return this;
     },
 

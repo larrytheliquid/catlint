@@ -5,16 +5,10 @@
       %small category theory validation tool
   .row#app
     .span5#left
-      - image_size = "280"
-      - if @error
-        .alert-message.error
-          %p= @error
-        %img{:src => "images/catlint.jpg", :height => image_size, :width => image_size}
-      - else
-        .alert-message.success
-          %p Your category is valid!
-        #stats
-        %img{:src => @category.to_gchart_url, :height => image_size, :width => image_size}
+      .alert-message.success
+        %p Your category is valid!
+      #stats
+      #graph
 
     .span10#right
       - form_tag url(:validator), :method => :post do
@@ -35,6 +29,9 @@
           %h3.nav.btn.large.span4 Objects: <%= objectsCount %>
           %h3.nav.btn.large.span4 Morphisms: <%= morphismsCount %>
           %h3.nav.btn.large.span4 Compositions: <%= compositionsCount %>
+
+        %script(type="text/template" id="graph-template")
+          = %{<img src=<%= dot %>>}
 
         %script(type="text/template" id="morphism-template")
           .equation
