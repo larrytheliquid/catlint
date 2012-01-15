@@ -8,6 +8,10 @@ $(function(){
     source: function() { return this.get("source"); },
     target: function() { return this.get("target"); },
 
+    composable: function() {
+      return Morphisms.from(this.target());
+    },
+
     validate: function(attrs) {
 
       if (!attrs.name) {
@@ -58,9 +62,15 @@ $(function(){
       })));
     },
 
-    from: function() {
-      return _(this.objects()).map(function(object) {
-        return object;
+    from: function(x) {
+      return this.filter(function(f) {
+        return x == f.source();
+      });
+    },
+
+    composites: function(g, f) {
+      return this.filter(function(gof) {
+        return (gof.target() == g.target()) && (gof.source() == f.source());
       });
     },
 
@@ -96,15 +106,15 @@ $(function(){
   window.Composition = Backbone.Model.extend({
 
     left: function() {
-      return Morphisms.get(this.get("left_id"));
+      return Morphisms.get(this.get("leftId"));
     },
 
     right: function() {
-      return Morphisms.get(this.get("right_id"));
+      return Morphisms.get(this.get("rightId"));
     },
 
     composite: function() {
-      return Morphisms.get(this.get("composite_id"));
+      return Morphisms.get(this.get("compositeId"));
     }
 
   });
@@ -113,7 +123,41 @@ $(function(){
 
     model: Composition,
 
-    localStorage: new Store("compositions")
+    localStorage: new Store("compositions"),
+
+    byMorphisms: function(g, f) {
+      return this.find(function(c) {
+        return (g == c.left()) && (f == c.right());
+      });
+    },
+
+    define: function() {
+      Morphisms.each(function(f) {
+        _.each(f.composable(), function(g) {
+          var existingComposition = this.byMorphisms(g, f);
+          var composites = Morphisms.composites(g, f);
+
+          if (!existingComposition) {
+            if (composites.length == 1) {
+              Compositions.create({
+                leftId: g.id,
+                rightId: f.id,
+                compositeId: composites[0].id
+              });
+            } else {
+              Compositions.create({
+                leftId: g.id,
+                rightId: f.id
+              });
+            }
+          } else {
+            if (!existingComposition.composite() && composites.length == 1) {
+              existingComposition.save({compositeId: composites[0].id});
+            }
+          }
+        }, this);
+      }, this);
+    }
 
   });
 
@@ -184,10 +228,14 @@ $(function(){
       this.target = this.$("#morphism-target input");
 
       Morphisms.bind("all", this.render, this);
+      Compositions.bind("all", this.render, this);
       Morphisms.bind("add", this.renderValid, this);
       Morphisms.bind("add", this.addMorphism, this);
+      Compositions.bind("add", this.addComposition, this);
 
       Morphisms.fetch({add: true});
+      Compositions.fetch({add: true});
+      Morphisms.bind("add", Compositions.define, Compositions);
     },
 
     clearInvalid: function() {
@@ -244,8 +292,9 @@ $(function(){
       this.$("#morphisms").append(view.render().el);
     },
 
-    addAll: function() {
-      Morphisms.each(this.addMorphism);
+    addComposition: function(composition) {
+      var view = new CompositionView({model: composition});
+      this.$("#compositions").append(view.render().el);
     },
 
     createMorphism: function(event) {

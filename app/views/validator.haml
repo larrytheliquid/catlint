@@ -46,11 +46,11 @@
 
         %script(type="text/template" id="composition-template")
           .equation
-            %span.btn.span2.info <%= c.left.name %>
-            %span.equation-text o
-            %span.btn.span2.info <%= c.right.name %>
+            %span.btn.span2.primary <%= c.left().name() %>
+            %span.equation-text &#8728;
+            %span.btn.span2.primary <%= c.right().name() %>
             %span.equation-text =
-            %span.btn.span2.info <%= c.composite.name %>
+            %span.btn.span2.primary <%= c.composite() && c.composite().name() %>
 
 
 
