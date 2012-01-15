@@ -5,7 +5,7 @@
       %small category theory validation tool
   .row#app
     .span5#left
-      #validation.alert-message.error
+      #validation.alert-message.error(style="display:none;")
       #stats
       #graph
 
@@ -13,11 +13,11 @@
       - form_tag url(:validator), :method => :post do
         - field_class = "span3"
         .equation.input
-          = text_field_tag "hom_f", :placeholder => "morphism", :value => "", :class => field_class, :id => "hom_f"
+          %span#morphism-name.clearfix= text_field_tag "morphism-name", :placeholder => "morphism", :value => "", :class => field_class
           %span.equation-text :
-          = text_field_tag "hom_src", :placeholder => "source", :value => "", :class => field_class, :id => "hom_src"
+          %span#morphism-source.clearfix= text_field_tag "morphism-source", :placeholder => "source", :value => "", :class => field_class
           %span.equation-text &rarr;
-          = text_field_tag "hom_trg", :placeholder => "target", :value => "", :class => field_class, :id => "hom_trg"
+          %span#morphism-target.clearfix= text_field_tag "morphism-target", :placeholder => "target", :value => "", :class => field_class
           %a#add-morphism.btn(href="#_") +
 
         %ul#morphisms

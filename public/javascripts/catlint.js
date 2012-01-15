@@ -9,20 +9,34 @@ $(function(){
     target: function() { return this.get("target"); },
 
     validate: function(attrs) {
+
       if (!attrs.name) {
-        return "morphism name is required";
+        return {
+          selector: "#morphism-name",
+          message: "morphism name is required"
+        };
       }
 
-      if (attrs.name && _.include(Morphisms.pluck("name"), attrs.name)) {
-        return "morphism '" + attrs.name + "' already exists";
+      var existingMorphism = attrs.name && Morphisms.byName(attrs.name);
+      if (existingMorphism) {
+        return {
+          selector: "#morphism-name, #morphisms span:contains('" + attrs.name + "')",
+          message: "morphism '" + attrs.name + "' already exists"
+        };
       }
 
       if (!attrs.source) {
-        return "morphism source is required";
+        return {
+          selector: "#morphism-source",
+          message: "morphism source is required"
+        };
       }
 
       if (!attrs.target) {
-        return "morphism target is required";
+        return {
+          selector: "#morphism-target",
+          message: "morphism target is required"
+        };
       }
 
     }
@@ -46,6 +60,12 @@ $(function(){
     from: function() {
       return _(this.objects()).map(function(object) {
         return object;
+      });
+    },
+
+    byName: function(name) {
+      return this.find(function(f) {
+        return f.name() == name;
       });
     },
 
@@ -154,9 +174,9 @@ $(function(){
     },
 
     initialize: function() {
-      this.name = this.$("#hom_f");
-      this.source = this.$("#hom_src");
-      this.target = this.$("#hom_trg");
+      this.name = this.$("#morphism-name input");
+      this.source = this.$("#morphism-source input");
+      this.target = this.$("#morphism-target input");
 
       Morphisms.bind("add", this.renderValid, this);
       Morphisms.bind("add", this.addMorphism, this);
@@ -165,8 +185,14 @@ $(function(){
       Morphisms.fetch({add: true});
     },
 
+    clearInvalid: function() {
+      this.$("#validation").fadeOut();
+      this.$("#right .error").removeClass("error");
+      this.$("#morphisms span").addClass("info");
+    },
+
     renderValid: function() {
-      this.$("#validation").hide();
+      this.clearInvalid();
       this.name.val("");
       this.source.val("");
       this.target.val("");
@@ -175,10 +201,12 @@ $(function(){
 
     renderInvalid: function(view) {
       return function(model, error) {
+        view.clearInvalid();
         view.$("#validation").html(view.validationTemplate({
-          message: error
+          message: error.message
         }));
-        view.$("#validation").show();
+        view.$("#validation").fadeIn();
+        view.$(error.selector).removeClass("info").addClass("error");
         return view;
       };
     },
