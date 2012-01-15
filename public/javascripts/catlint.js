@@ -64,19 +64,19 @@ $(function(){
 
     from: function(x) {
       return this.filter(function(f) {
-        return x == f.source();
+        return x === f.source();
       });
     },
 
     composites: function(g, f) {
       return this.filter(function(gof) {
-        return (gof.target() == g.target()) && (gof.source() == f.source());
+        return (gof.target() === g.target()) && (gof.source() === f.source());
       });
     },
 
     byName: function(name) {
       return this.find(function(f) {
-        return f.name() == name;
+        return f.name() === name;
       });
     },
 
@@ -85,7 +85,7 @@ $(function(){
       this.each(function(f) {
         result = result + "\"" + f.source() + "\" -> ";
         result = result + "\"" + f.target() + "\"";
-        if (f == invalidMorphism) {
+        if (f === invalidMorphism) {
           result = result + "[color=\"red\"]";
         }
         result = result + ";";
@@ -127,7 +127,7 @@ $(function(){
 
     byMorphisms: function(g, f) {
       return this.find(function(c) {
-        return (g == c.left()) && (f == c.right());
+        return (g === c.left()) && (f === c.right());
       });
     },
 
@@ -138,7 +138,7 @@ $(function(){
           var composites = Morphisms.composites(g, f);
 
           if (!existingComposition) {
-            if (composites.length == 1) {
+            if (composites.length === 1) {
               Compositions.create({
                 leftId: g.id,
                 rightId: f.id,
@@ -151,7 +151,7 @@ $(function(){
               });
             }
           } else {
-            if (!existingComposition.composite() && composites.length == 1) {
+            if (!existingComposition.composite() && composites.length === 1) {
               existingComposition.save({compositeId: composites[0].id});
             }
           }
