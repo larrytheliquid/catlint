@@ -21,7 +21,8 @@ $(function(){
       if (existingMorphism) {
         return {
           selector: "#morphism-name, #morphisms span:contains('" + attrs.name + "')",
-          message: "morphism '" + attrs.name + "' already exists"
+          message: "morphism '" + attrs.name + "' already exists",
+          model: existingMorphism
         };
       }
 
@@ -69,19 +70,23 @@ $(function(){
       });
     },
 
-    toDot: function() {
+    toDot: function(invalidMorphism) {
       var result = "digraph category { ";
       this.each(function(f) {
         result = result + "\"" + f.source() + "\" -> ";
-        result = result + "\"" + f.target() + "\";";
+        result = result + "\"" + f.target() + "\"";
+        if (f == invalidMorphism) {
+          result = result + "[color=\"red\"]";
+        }
+        result = result + ";";
       });
       result = result + " }";
       return result;
     },
 
-    toGchartUrl: function() {
+    toGchartUrl: function(invalidMorphism) {
       var dotUrl = "http://chart.apis.google.com/chart?cht=gv:circo&chl=";
-      return encodeURI(dotUrl + Morphisms.toDot());
+      return encodeURI(dotUrl + Morphisms.toDot(invalidMorphism));
     }
 
   });
@@ -178,9 +183,9 @@ $(function(){
       this.source = this.$("#morphism-source input");
       this.target = this.$("#morphism-target input");
 
+      Morphisms.bind("all", this.render, this);
       Morphisms.bind("add", this.renderValid, this);
       Morphisms.bind("add", this.addMorphism, this);
-      Morphisms.bind("all", this.render, this);
 
       Morphisms.fetch({add: true});
     },
@@ -202,6 +207,7 @@ $(function(){
     renderInvalid: function(view) {
       return function(model, error) {
         view.clearInvalid();
+        view.renderGraph(error.model);
         view.$("#validation").html(view.validationTemplate({
           message: error.message
         }));
@@ -220,9 +226,9 @@ $(function(){
       return this;
     },
 
-    renderGraph: function() {
+    renderGraph: function(invalidMorphism) {
       this.$("#graph").html(this.graphTemplate({
-        dot: Morphisms.toGchartUrl()
+        dot: Morphisms.toGchartUrl(invalidMorphism)
       }));
       return this;
     },
