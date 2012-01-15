@@ -193,7 +193,7 @@ $(function(){
     clearInvalid: function() {
       this.$("#validation").fadeOut();
       this.$("#right .error").removeClass("error");
-      this.$("#morphisms span").addClass("info");
+      this.$("#morphisms span.morphism").addClass("primary");
     },
 
     renderValid: function() {
@@ -212,7 +212,7 @@ $(function(){
           message: error.message
         }));
         view.$("#validation").fadeIn();
-        view.$(error.selector).removeClass("info").addClass("error");
+        view.$(error.selector).removeClass("primary").addClass("error");
         return view;
       };
     },
