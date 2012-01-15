@@ -6,7 +6,26 @@ $(function(){
 
     name: function() { return this.get("name"); },
     source: function() { return this.get("source"); },
-    target: function() { return this.get("target"); }
+    target: function() { return this.get("target"); },
+
+    validate: function(attrs) {
+      if (!attrs.name) {
+        return "morphism name is required";
+      }
+
+      if (attrs.name && _.include(Morphisms.pluck("name"), attrs.name)) {
+        return "morphism '" + attrs.name + "' already exists";
+      }
+
+      if (!attrs.source) {
+        return "morphism source is required";
+      }
+
+      if (!attrs.target) {
+        return "morphism target is required";
+      }
+
+    }
 
   });
 
@@ -126,6 +145,7 @@ $(function(){
 
     el: $("#app"),
 
+    validationTemplate: _.template($('#validation-template').html()),
     statsTemplate: _.template($('#stats-template').html()),
     graphTemplate: _.template($('#graph-template').html()),
 
@@ -138,10 +158,29 @@ $(function(){
       this.source = this.$("#hom_src");
       this.target = this.$("#hom_trg");
 
+      Morphisms.bind("add", this.renderValid, this);
       Morphisms.bind("add", this.addMorphism, this);
       Morphisms.bind("all", this.render, this);
 
       Morphisms.fetch({add: true});
+    },
+
+    renderValid: function() {
+      this.$("#validation").hide();
+      this.name.val("");
+      this.source.val("");
+      this.target.val("");
+      return this;
+    },
+
+    renderInvalid: function(view) {
+      return function(model, error) {
+        view.$("#validation").html(view.validationTemplate({
+          message: error
+        }));
+        view.$("#validation").show();
+        return view;
+      };
     },
 
     renderStats: function() {
@@ -154,7 +193,6 @@ $(function(){
     },
 
     renderGraph: function() {
-      // alert(Morphisms.toGchartUrl());
       this.$("#graph").html(this.graphTemplate({
         dot: Morphisms.toGchartUrl()
       }));
@@ -179,15 +217,13 @@ $(function(){
     createMorphism: function(event) {
       event.preventDefault();
 
-      Morphisms.create({
+      var valid = Morphisms.create({
         name: this.name.val(),
         source: this.source.val(),
         target: this.target.val()
+      }, {
+        error: this.renderInvalid(this)
       });
-
-      this.name.val("");
-      this.source.val("");
-      this.target.val("");
     }
 
   });

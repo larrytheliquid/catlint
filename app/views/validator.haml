@@ -5,8 +5,7 @@
       %small category theory validation tool
   .row#app
     .span5#left
-      .alert-message.success
-        %p Your category is valid!
+      #validation.alert-message.error
       #stats
       #graph
 
@@ -25,13 +24,16 @@
 
         %ul#compositions
 
+        %script(type="text/template" id="validation-template")
+          %p <%= message %>
+
         %script(type="text/template" id="stats-template")
           %h3.nav.btn.large.span4 Objects: <%= objectsCount %>
           %h3.nav.btn.large.span4 Morphisms: <%= morphismsCount %>
           %h3.nav.btn.large.span4 Compositions: <%= compositionsCount %>
 
         %script(type="text/template" id="graph-template")
-          = %{<img src=<%= dot %>>}
+          = %{<img src=<%= dot %> height="250" width="250">}
 
         %script(type="text/template" id="morphism-template")
           .equation
@@ -49,4 +51,6 @@
             %span.btn.span2.info <%= c.right.name %>
             %span.equation-text =
             %span.btn.span2.info <%= c.composite.name %>
+
+
 
