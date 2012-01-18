@@ -4,15 +4,10 @@
       Example
       %small define and validate your category
   .row#app
-    .span19
-      %ul.tabs
-        %li.active
-          %a Morphisms (10)
-        %li
-          %a Compositions (2)
+    .span19#nav
+
     .span5#left
       #validation.alert-message.error(style="display:none;")
-      #stats
       #graph
 
     .span10#right
@@ -39,10 +34,12 @@
 %script(type="text/template" id="validation-template")
   %p <%= message %>
 
-%script(type="text/template" id="stats-template")
-  %h3.nav.btn.large.span4 Objects: <%= objectsCount %>
-  %h3.nav.btn.large.span4 Morphisms: <%= morphismsCount %>
-  %h3.nav.btn.large.span4 Compositions: <%= compositionsCount %>
+%script(type="text/template" id="nav-template")
+  %ul.tabs
+    %li.active
+      %a Morphisms (<%= morphismsCount %>)
+    %li
+      %a Compositions (<%= compositionsCount %>)
 
 %script(type="text/template" id="graph-template")
   = %{<img src=<%= dot %> height="250" width="250">}

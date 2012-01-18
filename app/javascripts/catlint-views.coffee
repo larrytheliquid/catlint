@@ -36,7 +36,7 @@ $ ->
     el: $("#app")
 
     validationTemplate: _.template $("#validation-template").html()
-    statsTemplate:      _.template $("#stats-template").html()
+    navTemplate:        _.template $("#nav-template").html()
     graphTemplate:      _.template $("#graph-template").html()
 
     events:
@@ -79,8 +79,8 @@ $ ->
         view.$(error.selector).removeClass("primary").addClass("error")
         view
 
-    renderStats: ->
-      @$("#stats").html @statsTemplate
+    renderNav: ->
+      @$("#nav").html @navTemplate
         objectsCount:      Morphisms.objects().length
         morphismsCount:    Morphisms.length
         compositionsCount: Compositions.length
@@ -92,7 +92,7 @@ $ ->
       @
 
     render: ->
-      @renderStats()
+      @renderNav()
       @renderGraph()
       @
 
