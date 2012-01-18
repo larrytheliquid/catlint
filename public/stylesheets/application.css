@@ -48,15 +48,6 @@ body {
   padding-left: 19px;
   border-left: 1px solid #eee; }
 
-#morphisms {
-  margin-bottom: 0;
-  padding-bottom: 5px; }
-
-#compositions {
-  margin-top: 0;
-  padding-top: 15px;
-  border-top: 1px solid #eee; }
-
 .content .input {
   margin-left: 0;
   padding-left: 0; }
