@@ -6,13 +6,6 @@ body {
   padding-top: 40px;
   /* 40px to make the container go all the way to the bottom of the topbar */ }
 
-.container > footer p {
-  text-align: center;
-  /* center align it with the container */ }
-
-.container {
-  /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */ }
-
 /* The white background content wrapper */
 .content {
   background-color: #fff;
@@ -33,6 +26,7 @@ body {
   margin: -20px -20px 20px; }
 
 /* Styles you shouldn't keep as they are for displaying this base example only */
+.content #choices,
 .content #right,
 .content #left {
   min-height: 550px; }
@@ -42,6 +36,11 @@ body {
   margin-right: 0;
   padding-right: 19px;
   border-right: 1px solid #eee; }
+
+.content #choices {
+  margin-left: 0;
+  padding-left: 19px;
+  border-left: 1px solid #eee; }
 
 #morphisms {
   margin-bottom: 0;
@@ -85,12 +84,6 @@ body {
   color: #BFBFBF;
   font-size: 150%;
   font-weight: 900; }
-
-h3 {
-  margin-bottom: 5px; }
-
-th {
-  white-space: nowrap; }
 
 ul {
   padding: 0px;
