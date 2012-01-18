@@ -4,17 +4,18 @@
       Example
       %small Category
   .row#app
+    .span19
+      %ul.tabs
+        %li.active
+          %a Morphisms (10)
+        %li
+          %a Compositions (2)
     .span5#left
       #validation.alert-message.error(style="display:none;")
       #stats
       #graph
 
     .span10#right
-      %ul.tabs
-        %li.active
-          %a Morphisms (10)
-        %li
-          %a Compositions (2)
       - form_tag url(:validator), :method => :post do
         - field_class = "span3"
         .equation.input
