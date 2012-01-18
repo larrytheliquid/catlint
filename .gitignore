@@ -6,3 +6,4 @@ vendor/gems/*
 .sass-cache/*
 *.log
 public/javascripts/catlint*.js
+public/stylesheets/bootstrap*.css
