@@ -29,38 +29,38 @@
 
         %ul#compositions
 
-        %script(type="text/template" id="validation-template")
-          %p <%= message %>
-
-        %script(type="text/template" id="stats-template")
-          %h3.nav.btn.large.span4 Objects: <%= objectsCount %>
-          %h3.nav.btn.large.span4 Morphisms: <%= morphismsCount %>
-          %h3.nav.btn.large.span4 Compositions: <%= compositionsCount %>
-
-        %script(type="text/template" id="graph-template")
-          = %{<img src=<%= dot %> height="250" width="250">}
-
-        %script(type="text/template" id="morphism-template")
-          .equation
-            %span.morphism.btn.span2.primary <%= name %>
-            %span.equation-text :
-            %span.btn.span2.info <%= source %>
-            %span.equation-text &rarr;
-            %span.btn.span2.info <%= target %>
-            %a.remove-morphism.btn(href="#_") x
-
-        %script(type="text/template" id="composition-template")
-          .equation
-            %span.btn.span2.primary <%= c.left().name() %>
-            %span.equation-text &#8728;
-            %span.btn.span2.primary <%= c.right().name() %>
-            %span.equation-text =
-            %span.btn.span2.primary <%= c.composite() && c.composite().name() %>
-
     .span4#choices
       .equation
         %span.btn.span2.primary example choice 1
       .equation
         %span.btn.span2.primary example choice 2
+
+%script(type="text/template" id="validation-template")
+  %p <%= message %>
+
+%script(type="text/template" id="stats-template")
+  %h3.nav.btn.large.span4 Objects: <%= objectsCount %>
+  %h3.nav.btn.large.span4 Morphisms: <%= morphismsCount %>
+  %h3.nav.btn.large.span4 Compositions: <%= compositionsCount %>
+
+%script(type="text/template" id="graph-template")
+  = %{<img src=<%= dot %> height="250" width="250">}
+
+%script(type="text/template" id="morphism-template")
+  .equation
+    %span.morphism.btn.span2.primary <%= name %>
+    %span.equation-text :
+    %span.btn.span2.info <%= source %>
+    %span.equation-text &rarr;
+    %span.btn.span2.info <%= target %>
+    %a.remove-morphism.btn(href="#_") x
+
+%script(type="text/template" id="composition-template")
+  .equation
+    %span.btn.span2.primary <%= c.left().name() %>
+    %span.equation-text &#8728;
+    %span.btn.span2.primary <%= c.right().name() %>
+    %span.equation-text =
+    %span.btn.span2.primary <%= c.composite() && c.composite().name() %>
 
 
