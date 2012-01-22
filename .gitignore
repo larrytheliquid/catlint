@@ -7,3 +7,5 @@ vendor/gems/*
 *.log
 public/javascripts/catlint*.js
 public/stylesheets/bootstrap*.css
+*.agdai
+jAgda*.js
